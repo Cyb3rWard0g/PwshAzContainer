@@ -101,7 +101,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'Azure', 'Containers', 'Azure Container Apps', 'PowerShell', 'Security'
+        Tags = 'Azure', 'Containers', 'AzureContainerApps', 'PowerShell', 'Security'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/Cyb3rWard0g/PwshAzContainerApp/blob/main/LICENSE'
