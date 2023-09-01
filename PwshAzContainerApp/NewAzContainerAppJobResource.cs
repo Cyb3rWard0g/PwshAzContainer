@@ -9,9 +9,9 @@ using Azure.ResourceManager.Models;
 
 namespace PwshAzContainerApp
 {
-    [Cmdlet(VerbsCommon.New, "AzContainerAppResource")]
-    [OutputType(typeof(ContainerAppData))]
-    public class NewAzContainerAppResource : PSCmdlet
+    [Cmdlet(VerbsCommon.New, "AzContainerAppJobResource")]
+    [OutputType(typeof(ContainerAppJobData))]
+    public class NewAzContainerAppJobResource : PSCmdlet
     {
         [Parameter(Mandatory = true)]
         public string Name { get; set; }
@@ -25,18 +25,12 @@ namespace PwshAzContainerApp
         [Parameter(Mandatory = true)]
         public string EnvironmentId { get; set; }
 
-        [Parameter]
-        [ValidateSet("Multiple","Single")]
-        public string ConfigActiveRevisionsMode { get; set; } = "Multiple";
-
-        [Parameter]
-        public ContainerAppIngressConfiguration ConfigIngressObject { get; set; }
 
         [Parameter()]
         public List<ContainerAppRegistryCredentials> ConfigRegistries { get; set; }
 
         [Parameter(Mandatory = true)]
-        public ContainerAppTemplate ContainerTemplate { get; set;}
+        public ContainerAppJobTemplate ContainerTemplate { get; set;}
 
         [Parameter()]
         public string Location { get; set; } = "East US";
@@ -68,18 +62,23 @@ namespace PwshAzContainerApp
                     ResourceGroupResource resourceGroupResource = client.GetResourceGroupResource(resourceGroupResourceId);
 
                     // get the collection of this ContainerAppResource
-                    WriteVerbose("[+] Getting Azure Container Apps...");
-                    ContainerAppCollection collection = resourceGroupResource.GetContainerApps();
+                    WriteVerbose("[+] Getting Azure Container App Jobs...");
+                    ContainerAppJobCollection collection = resourceGroupResource.GetContainerAppJobs();
 
-                    WriteVerbose("[+] Defining Container App Data...");
-                    string containerAppName = Name;
-                    var appData = new ContainerAppData(new AzureLocation(Location))
+                    WriteVerbose("[+] Defining Container App Job Data...");
+                    string containerAppJobName = Name;
+                    var appJobData = new ContainerAppJobData(new AzureLocation(Location))
                     {
                         EnvironmentId = new ResourceIdentifier(EnvironmentId),
-                        Configuration = new ContainerAppConfiguration()
+                        Configuration = new ContainerAppJobConfiguration(ContainerAppJobTriggerType.Manual, 180)
                         {
-                            ActiveRevisionsMode = ConfigActiveRevisionsMode,
-                            Ingress = ConfigIngressObject ?? null,
+                            ReplicaTimeout = 180,
+                            ReplicaRetryLimit = 0,
+                            ManualTriggerConfig = new JobConfigurationManualTriggerConfig()
+                            {
+                                ReplicaCompletionCount = 1,
+                                Parallelism = 4,
+                            },
                         },
                         Template = ContainerTemplate,
                     };
@@ -88,7 +87,7 @@ namespace PwshAzContainerApp
                     {
                         foreach (var credential in ConfigRegistries)
                         {
-                            appData.Configuration.Registries.Add(credential);
+                            appJobData.Configuration.Registries.Add(credential);
                         }
                     }
 
@@ -105,13 +104,13 @@ namespace PwshAzContainerApp
                             managedIdentity = new ManagedServiceIdentity(ManagedServiceIdentityType.UserAssigned);
                             managedIdentity.UserAssignedIdentities.Add(new ResourceIdentifier(Identity), new UserAssignedIdentity());
                         }
-                        appData.Identity = managedIdentity;
+                        appJobData.Identity = managedIdentity;
                     }
 
-                    WriteVerbose("[+] Creating Azure Container App...");
-                    ArmOperation<ContainerAppResource> lro = collection.CreateOrUpdateAsync(WaitUntil.Completed, containerAppName, appData).GetAwaiter().GetResult();
-                    ContainerAppResource result = lro.Value;
-                    WriteVerbose("[+] Azure Container App creation Results:");
+                    WriteVerbose("[+] Creating Azure Container App Job...");
+                    ArmOperation<ContainerAppJobResource> lro = collection.CreateOrUpdateAsync(WaitUntil.Completed, containerAppJobName, appJobData).GetAwaiter().GetResult();
+                    ContainerAppJobResource result = lro.Value;
+                    WriteVerbose("[+] Azure Container App Job creation Results:");
                     WriteObject(result);
                 }
                 catch (Azure.RequestFailedException ex)

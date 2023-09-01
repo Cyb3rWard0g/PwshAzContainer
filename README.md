@@ -1,12 +1,13 @@
 # PwshAzContainerApp
 
-PwshAzContainerApp is a PowerShell binary module built using .NET Core and designed to work with PowerShell Core. It provides cmdlets, written in C#, for interacting with [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview).
+PwshAzContainerApp is a PowerShell binary module built using .NET Core and designed to work with PowerShell Core. It provides cmdlets, written in C#, for interacting with [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview) and [Azure Container App Jobs](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli).
 
 ## Dependencies
 
 `PwshAzContainerApp` depends on the following NuGet packages:
 
 - [Azure.Identity](https://www.nuget.org/packages/Azure.Identity/) (Version 1.10.0)
+- [Azure.ResourceManager](https://www.nuget.org/packages/Azure.ResourceManager/) (1.7.0)
 - [Azure.ResourceManager.AppContainers](https://www.nuget.org/packages/Azure.ResourceManager.AppContainers/) (Version 1.1.0)
 - [PowerShellStandard.Library](https://www.nuget.org/packages/PowerShellStandard.Library/) (Version 7.0.0-preview.1)
 - [dnMerge](https://www.nuget.org/packages/dnMerge/) (Version 0.5.15)
@@ -71,19 +72,20 @@ Get-AzContainerAppResource -Name MyApp -ResourceGroupName MyGroup -verbose
 ### Create Azure Container App
 
 ```powershell
-Connect-AzResourceManager -verbose
 $IdentityResourceId = '<User-Assigned Managed Identity Resource Id>'
-$ContainerAppName = "ca-$(-join ((65..90) + (97..122) | Get-Random -Count 8 | ForEach-Object {[char]$_}))"
+$ContainerAppName = "ca-$(-join ((65..90) + (97..122) | Get-Random -Count 8 | ForEach-Object {[char]$_}))".ToLower()
 $ResourceGroup = '<MyGroup>'
-$ContainerImage = '<ContainerImage?'
-$ContainerName = "$(-join ((65..90) + (97..122) | Get-Random -Count 5 | ForEach-Object {[char]$_}))"
-$EnvironmentName = '<Container App Manged Environment Name>'
+$ContainerRegistryServer = '<Container Registry Server>'
+$ContainerImage = "$ContainerRegistryServer/<container-name>:<tag>"
+$ContainerImage = '<ContainerImage>'
+$ContainerName = "$(-join ((65..90) + (97..122) | Get-Random -Count 5 | ForEach-Object {[char]$_}))".ToLower()
+$EnvironmentName = '<Container App Managed Environment Name>'
 $Environment = Get-AzContainerAppEnvironment -Name $EnvironmentName -ResourceGroupName $ResourceGroup
 $EnvironmentId = $Environment.id
 
 $Ingress = New-AzContainerAppIngress -External $false -TargetPort 80
 $Template = New-AzContainerAppTemplate -ContainerImage $ContainerImage -ContainerName $ContainerName
-$Registries = New-AzContainerAppRegistryCredentials -Identity $IdentityResourceId -Server '<Container Registry Server>'
+$Registries = New-AzContainerAppRegistryCredentials -Identity $IdentityResourceId -Server $ContainerRegistryServer
 
 $ContainerApp = New-AzContainerAppResource -Name $ContainerAppName -ResourceGroupName $ResourceGroup -EnvironmentId $EnvironmentId -ConfigIngressObject $ingress -ContainerTemplate $Template -ConfigRegistries $Registries -Identity $IdentityResourceId -verbose
 $ContainerApp.Data
@@ -97,6 +99,26 @@ Remove-AzContainerAppResource -Name MyApp -ResourceGroupName MyGroup -Verbose
 
 ```powershell
 Remove-AzContainerAppResource -ResourceId $ContainerAppResourceId -Verbose
+```
+
+### Create Azure Container App Job
+
+```powershell
+$IdentityResourceId = '<User-Assigned Managed Identity Resource Id>'
+$IdentityClientId = '<User-Assigned Managed Identity Client Id>'
+$ContainerAppJobName = "caj-$(-join ((65..90) + (97..122) | Get-Random -Count 8 | ForEach-Object {[char]$_}))".ToLower()
+$ResourceGroup = '<MyGroup>'
+$ContainerImage = "mcr.microsoft.com/azure-powershell:latest"
+$ContainerName = "$(-join ((65..90) + (97..122) | Get-Random -Count 5 | ForEach-Object {[char]$_}))".ToLower()
+$EnvironmentName = '<Container App Managed Environment Name>'
+$Environment = Get-AzContainerAppEnvironment -Name $EnvironmentName -ResourceGroupName $ResourceGroup
+$EnvironmentId = $Environment.id
+
+$customObjects = @([PSCustomObject]@{Name = "MANAGED_IDENTITY_CLIENT_ID"; Value = $IdentityClientId})
+$Template = New-AzContainerAppJobTemplate -ContainerImage $ContainerImage -ContainerName $ContainerName -ContainerEnv $customObjects -verbose
+
+$ContainerAppJob = New-AzContainerAppJobResource -Name $ContainerAppJobName -ResourceGroupName $ResourceGroup -EnvironmentId $EnvironmentId -ContainerTemplate $Template -Identity $IdentityResourceId -verbose
+$ContainerAppJob.Data
 ```
 
 ## Contributing
