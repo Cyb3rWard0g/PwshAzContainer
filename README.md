@@ -121,6 +121,33 @@ $ContainerAppJob = New-AzContainerAppJobResource -Name $ContainerAppJobName -Res
 $ContainerAppJob.Data
 ```
 
+### Start Azure Container App Job
+
+```powershell
+Start-AzContainerAppJobResource -Name "MyJob" -ResourceGroupName "MyGroup" -Verbose
+```
+
+```powershell
+$commands = @("pwsh","-c","whoami")
+Start-AzContainerAppJobResource -Name "MyJob" -ResourceGroupName "MyGroup" -ContainerCommand $commands -Verbose
+```
+
+```powershell
+$envVariables = @([PSCustomObject]@{Name = "EMAIL_SENDER"; Value = "acccount@<domain>.com"}) 
+$commands = @('pwsh','-c','write-host $env:EMAIL_SENDER')
+Start-AzContainerAppJobResource -Name "MyJob" -ResourceGroupName "MyGroup" -ContainerCommand $commands -ContainerEnv $envVariables -Verbose
+```
+
+### Get Job Execution History
+
+```powershell
+Get-AzContainerAppJobExecution -JobName "MyJob" -ResourceGroupName "MyGroup" -verbose
+```
+
+```powershell
+Get-AzContainerAppJobExecution -JobName "MyJob" -ResourceGroupName "MyGroup" -ExecutionName "NewExecution" -verbose
+```
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request.

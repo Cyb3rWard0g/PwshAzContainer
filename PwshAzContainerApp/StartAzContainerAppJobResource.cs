@@ -19,13 +19,16 @@ namespace PwshAzContainerApp
         public string ResourceGroupName { get; set; }
 
         [Parameter]
-        public string SubscriptionId { get; set; }
+        public string? SubscriptionId { get; set; }
 
-        [Parameter(Mandatory = false)]
-        public JobExecutionContainer JobContainer { get; set; } // Allow passing a single JobExecutionContainer
+        [Parameter]
+        public ContainerAppJobExecutionTemplate? JobExecutionTemplate { get; set; }
 
-        [Parameter(Mandatory = false)]
-        public ContainerAppJobExecutionTemplate JobExecutionTemplate { get; set; } // Allow passing the entire template
+        [Parameter]
+        public List<string>? ContainerCommand { get; set; }
+
+        [Parameter]
+        public PSObject[]? ContainerEnv { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -37,6 +40,8 @@ namespace PwshAzContainerApp
                 WriteVerbose("[+] Successfully retrieved the ARM client from session state.");
                 try
                 {
+                    ContainerAppJobExecutionTemplate Template = new ContainerAppJobExecutionTemplate();
+
                     // Get the subscription
                     if (string.IsNullOrEmpty(SubscriptionId))
                     {
@@ -49,27 +54,84 @@ namespace PwshAzContainerApp
                     WriteVerbose($"[+] Getting Azure Container App Job: {Name}");
                     ResourceIdentifier containerAppJobResourceId = ContainerAppJobResource.CreateResourceIdentifier(SubscriptionId, ResourceGroupName, Name);
                     ContainerAppJobResource containerAppJob = client.GetContainerAppJobResource(containerAppJobResourceId);
+                    
+                    ContainerAppJobData containerData = containerAppJob.Get().Value.Data;
 
-                    WriteVerbose("[+] Starting Azure Container App Job...");
-                    // Use the provided JobContainer or JobExecutionTemplate
-                    ContainerAppJobExecutionTemplate template;
-
-                    if (JobContainer != null)
+                    WriteVerbose("[+] Processing input..");
+                    if (JobExecutionTemplate != null)
                     {
-                        template = new ContainerAppJobExecutionTemplate()
+                        WriteVerbose("[+] Starting Job with new execution template..");
+                        if(JobExecutionTemplate.Containers[0].Env != null && containerData.Template.Containers[0].Env != null)
                         {
-                            Containers =
+                            WriteVerbose("[+] Retrieving existing environment variables..");
+                            foreach (var existingVar in containerData.Template.Containers[0].Env)
                             {
-                                JobContainer
+                                JobExecutionTemplate.Containers[0].Env.Add(existingVar);
                             }
-                        };
+                        }
+                        Template = JobExecutionTemplate;
                     }
                     else
                     {
-                        template = JobExecutionTemplate ?? new ContainerAppJobExecutionTemplate();
-                    }
+                        if(ContainerCommand != null && ContainerCommand.Count > 0)
+                        {
+                            WriteVerbose("[+] Starting Job with new commands..");
+                            Template = new ContainerAppJobExecutionTemplate()
+                            {
+                                Containers =
+                                {
+                                    new JobExecutionContainer()
+                                    {
+                                        Image = containerData.Template.Containers[0].Image,
+                                        Name = containerData.Template.Containers[0].Name,
+                                        Resources = new AppContainerResources()
+                                        {
+                                            Cpu = containerData.Template.Containers[0].Resources.Cpu,
+                                            Memory = containerData.Template.Containers[0].Resources.Memory,
+                                        },
+                                    }
+                                },
+                            };
+                            WriteVerbose("[+] Adding new commands to execution template..");
+                            foreach (var newCmd in ContainerCommand)
+                            {
+                                Template.Containers[0].Command.Add(newCmd);
+                            }
+                        }
 
-                    ArmOperation<ContainerAppJobExecutionBase> lro = containerAppJob.StartAsync(WaitUntil.Completed, template: template).GetAwaiter().GetResult();
+                        // Setting environment variables
+                        if(ContainerEnv != null && containerData.Template.Containers[0].Env != null)
+                        {
+                            WriteVerbose("[+] Retrieving existing environment variables..");
+                            foreach (var existingVar in containerData.Template.Containers[0].Env)
+                            {
+                                Template.Containers[0].Env.Add(existingVar);
+                            }
+                        }
+
+                        if (ContainerEnv != null && ContainerEnv.Length > 0)
+                        {     
+                            WriteVerbose("[+] Adding new environment variables to template..");
+                            foreach (var customEnvVar in ContainerEnv)
+                            {
+                                ContainerAppEnvironmentVariable envVar = new()
+                                {
+                                    Name = customEnvVar.Properties["Name"].Value.ToString()
+                                };
+
+                                if (customEnvVar.Properties["Value"] != null)
+                                {
+                                    envVar.Value = customEnvVar.Properties["Value"].Value.ToString();
+                                }
+                                else if (customEnvVar.Properties["SecretRef"] != null) {
+                                    envVar.SecretRef = customEnvVar.Properties["SecretRef"].Value.ToString();
+                                }
+                                Template.Containers[0].Env.Add(envVar);
+                            }
+                        }
+                    }
+                    WriteVerbose("[+] Starting Azure Container App Job...");
+                    ArmOperation<ContainerAppJobExecutionBase> lro = containerAppJob.StartAsync(WaitUntil.Completed, Template).GetAwaiter().GetResult();
                     ContainerAppJobExecutionBase result = lro.Value;
                     WriteVerbose("[+] Azure Container App Job was executed");
                     WriteObject(result);

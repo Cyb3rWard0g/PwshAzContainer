@@ -3,9 +3,9 @@ using Azure.ResourceManager.AppContainers.Models;
 
 namespace PwshAzContainerApp
 {
-    [Cmdlet(VerbsCommon.New, "AzContainerAppJobTemplate")]
-    [OutputType(typeof(ContainerAppJobTemplate))]
-    public class NewAzContainerAppJobTemplate : PSCmdlet
+    [Cmdlet(VerbsCommon.New, "AzContainerAppJobExecutionTemplate")]
+    [OutputType(typeof(ContainerAppJobExecutionTemplate))]
+    public class NewAzContainerAppJobExecutionTemplate : PSCmdlet
     {
         [Parameter(Mandatory = true)]
         public string ContainerImage { get; set; }
@@ -29,11 +29,11 @@ namespace PwshAzContainerApp
         {
             base.ProcessRecord();
             
-            var Template = new ContainerAppJobTemplate()
+            var ExecutionTemplate = new ContainerAppJobExecutionTemplate()
             {
                 Containers =
                 {
-                    new ContainerAppContainer()
+                    new JobExecutionContainer()
                     {
                         Image = ContainerImage,
                         Name = ContainerName,
@@ -51,7 +51,7 @@ namespace PwshAzContainerApp
             {
                 foreach (var command in ContainerCommand)
                 {
-                    Template.Containers[0].Command.Add(command);
+                    ExecutionTemplate.Containers[0].Command.Add(command);
                 }
             }
 
@@ -70,10 +70,10 @@ namespace PwshAzContainerApp
                     else if (customEnvVar.Properties["SecretRef"] != null) {
                         envVar.SecretRef = customEnvVar.Properties["SecretRef"].Value.ToString();
                     }
-                    Template.Containers[0].Env.Add(envVar);
+                    ExecutionTemplate.Containers[0].Env.Add(envVar);
                 }
             }
-            WriteObject(Template);
+            WriteObject(ExecutionTemplate);
         }
     }
 }

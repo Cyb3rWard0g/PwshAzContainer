@@ -7,9 +7,9 @@ using Azure.ResourceManager.Resources;
 
 namespace PwshAzContainerApp
 {
-    [Cmdlet(VerbsCommon.Remove, "AzContainerAppResource")]
+    [Cmdlet(VerbsCommon.Remove, "AzContainerAppJobResource")]
     [OutputType(typeof(ContainerAppData))]
-    public class RemoveAzContainerAppResource : PSCmdlet
+    public class RemoveAzContainerAppJobResource : PSCmdlet
     {
         [Parameter(Mandatory = true, ParameterSetName = "ByName")]
         public string Name { get; set; }
@@ -33,12 +33,12 @@ namespace PwshAzContainerApp
                 WriteVerbose("[+] Successfully retrieved the ARM client from session state.");
                 try
                 {
-                    ContainerAppResource containerApp;
+                    ContainerAppJobResource containerAppJob;
                 
                     if (ParameterSetName == "ById")
                     {
-                        WriteVerbose($"[+] Referencing container app by Id: {ResourceId}...");
-                        containerApp = client.GetContainerAppResource(new ResourceIdentifier(ResourceId));
+                        WriteVerbose($"[+] Referencing container app job by Id: {ResourceId}...");
+                        containerAppJob = client.GetContainerAppJobResource(new ResourceIdentifier(ResourceId));
                     }
                     else
                     {
@@ -51,14 +51,14 @@ namespace PwshAzContainerApp
                         }
                         WriteVerbose($"[+] Using subscription: {SubscriptionId}...");
 
-                        WriteVerbose($"[+] Getting Azure Container App: {Name}...");
-                        ResourceIdentifier containerAppResourceId = ContainerAppResource.CreateResourceIdentifier(SubscriptionId, ResourceGroupName, Name);
-                        containerApp = client.GetContainerAppResource(containerAppResourceId);
+                        WriteVerbose($"[+] Getting Azure Container App Job: {Name}...");
+                        ResourceIdentifier containerAppJobResourceId = ContainerAppJobResource.CreateResourceIdentifier(SubscriptionId, ResourceGroupName, Name);
+                        containerAppJob = client.GetContainerAppJobResource(containerAppJobResourceId);
                     }
 
-                    WriteVerbose("[+] Deleting Azure Container App...");
+                    WriteVerbose("[+] Deleting Azure Container App Job...");
                     // invoke the operation
-                    containerApp.DeleteAsync(WaitUntil.Completed).GetAwaiter().GetResult();
+                    containerAppJob.DeleteAsync(WaitUntil.Completed).GetAwaiter().GetResult();
                 }
                 catch (Azure.RequestFailedException ex)
                 {

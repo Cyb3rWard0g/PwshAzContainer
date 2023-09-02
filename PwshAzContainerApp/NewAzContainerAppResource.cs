@@ -30,10 +30,10 @@ namespace PwshAzContainerApp
         public string ConfigActiveRevisionsMode { get; set; } = "Multiple";
 
         [Parameter]
-        public ContainerAppIngressConfiguration ConfigIngressObject { get; set; }
+        public ContainerAppIngressConfiguration? ConfigIngressObject { get; set; }
 
         [Parameter()]
-        public List<ContainerAppRegistryCredentials> ConfigRegistries { get; set; }
+        public List<ContainerAppRegistryCredentials>? ConfigRegistries { get; set; }
 
         [Parameter(Mandatory = true)]
         public ContainerAppTemplate ContainerTemplate { get; set;}
@@ -42,7 +42,7 @@ namespace PwshAzContainerApp
         public string Location { get; set; } = "East US";
 
         [Parameter()]
-        public string Identity { get; set; }
+        public string? Identity { get; set; }
 
         protected override void ProcessRecord()
         {

@@ -17,7 +17,7 @@ namespace PwshAzContainerApp
         public string? ResourceGroupName { get; set; }
 
         [Parameter]
-        public string SubscriptionId { get; set; }
+        public string? SubscriptionId { get; set; }
 
         protected override void ProcessRecord()
         {

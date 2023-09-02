@@ -14,7 +14,7 @@ namespace PwshAzContainerApp
         public string Username { get; set; }
 
          [Parameter(Mandatory = true, ParameterSetName = "UserPassword")]
-        public string PasswordSecretReference { get; set; }
+        public string? PasswordSecretReference { get; set; }
 
         [Parameter(Mandatory = true)]
         public string Server { get; set; }

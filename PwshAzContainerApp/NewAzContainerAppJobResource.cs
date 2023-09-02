@@ -20,23 +20,23 @@ namespace PwshAzContainerApp
         public string ResourceGroupName { get; set; }
 
         [Parameter]
-        public string SubscriptionId { get; set; }
+        public string? SubscriptionId { get; set; }
 
         [Parameter(Mandatory = true)]
         public string EnvironmentId { get; set; }
 
 
         [Parameter()]
-        public List<ContainerAppRegistryCredentials> ConfigRegistries { get; set; }
+        public List<ContainerAppRegistryCredentials>? ConfigRegistries { get; set; }
 
         [Parameter(Mandatory = true)]
-        public ContainerAppJobTemplate ContainerTemplate { get; set;}
+        public ContainerAppJobTemplate? ContainerTemplate { get; set;}
 
         [Parameter()]
         public string Location { get; set; } = "East US";
 
         [Parameter()]
-        public string Identity { get; set; }
+        public string? Identity { get; set; }
 
         protected override void ProcessRecord()
         {
