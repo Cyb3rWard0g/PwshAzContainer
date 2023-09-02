@@ -12,7 +12,7 @@
 RootModule = 'PwshAzContainerApp.dll'
 
 # Version number of this module.
-ModuleVersion = '1.0.2'
+ModuleVersion = '1.0.3'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Core'
@@ -72,12 +72,12 @@ PowerShellVersion = '7.0'
 FunctionsToExport = '*'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = 'Connect-AzResourceManager', 'Get-AzContainerAppEnvironment', 
+CmdletsToExport = 'Connect-AzResourceManager', 'Get-AzContainerAppEnvironment', 'Get-AzContainerAppJobExecution', 
                'Get-AzContainerAppJobResource', 'Get-AzContainerAppResource', 
-               'New-AzContainerAppIngress', 
+               'New-AzContainerAppIngress', 'New-AzContainerAppJobExecutionTemplate', 'New-AzContainerAppJobResource', 'New-AzContainerAppJobTemplate',
                'New-AzContainerAppRegistryCredentials', 
                'New-AzContainerAppResource', 'New-AzContainerAppTemplate', 
-               'New-AzContainerAppTrafficWeight', 'Remove-AzContainerAppResource', 
+               'New-AzContainerAppTrafficWeight', 'Remove-AzContainerAppJobResource', 'Remove-AzContainerAppResource', 
                'Start-AzContainerAppJobResource'
 
 # Variables to export from this module
