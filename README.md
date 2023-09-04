@@ -10,9 +10,6 @@ PwshAzContainerApp is a PowerShell binary module built using .NET Core and desig
 - [Azure.ResourceManager](https://www.nuget.org/packages/Azure.ResourceManager/) (1.7.0)
 - [Azure.ResourceManager.AppContainers](https://www.nuget.org/packages/Azure.ResourceManager.AppContainers/) (Version 1.1.0)
 - [PowerShellStandard.Library](https://www.nuget.org/packages/PowerShellStandard.Library/) (Version 7.0.0-preview.1)
-- [dnMerge](https://www.nuget.org/packages/dnMerge/) (Version 0.5.15)
-
-Note that the `dnMerge` package is used to merge multiple NuGet packages into a single assembly to improve module compatibility.
 
 ## Installation
 

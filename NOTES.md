@@ -26,34 +26,19 @@ dotnet add package Azure.Identity
 
 ## Create Solution File
 
+change directories to the previous location.
+
 ```
+cd ..
+
 dotnet new sln
 
-dotnet sln add "$($module).csproj"
-```
-
-## Add dnMerge Reference
-
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-
-....
-
-  <ItemGroup>
-    <PackageReference Include="dnMerge" Version="0.5.15">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>    
-  </ItemGroup>
-
-.....
-
-</Project>
+dotnet sln add "$($module)/$($module).csproj"
 ```
 
 ## Make Sure Dependencies / References are also Built
 
-Add `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` to your property group section.
+Add `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` to your `.csproj` file's property group section.
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -77,10 +62,14 @@ Add `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` to your pr
 
 ## Build Project
 
-Make sure you build `Release` so that `dnMerge` can pack all references to one DLL.
+Create an `output` folder at the root of your project (outside of the module folder) and add a sub-folder with the name of the module `PwshAzContainerApp`.
+
+```powershell
+New-Item -Path output\$module -Type Directory
+```
 
 ```
-dotnet build --configuration Release
+dotnet build --configuration Release --output .\output\$module\
 ```
 
 ## Import Module Locally
@@ -88,13 +77,12 @@ dotnet build --configuration Release
 You can test your PowerShell binary module with all the references because of this property `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` in your `.csproj` file. Run the following command:
 
 ```powershell
-Import-Module PwshAzContainerApp\bin\Release\net7.0\PwshAzContainerApp.dll
+Import-Module .\output\$module\PwshAzContainerApp.dll
 ```
 
 ## Publish to PS Gallery
 
-* Create `output\PwshAzContainerApp` directory
-* Copy `PwshAzContainerApp.dll` and `PwshAzContainerApp.psd1` files to `output\PwshAzContainerApp`
+* Copy `PwshAzContainerApp.psd1` file to `output\PwshAzContainerApp`
 * Publish module to PSGallery with the following commands:
 
 ```powershell
