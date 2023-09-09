@@ -1,10 +1,10 @@
-# PwshAzContainerApp
+# PwshAzContainer Module
 
-PwshAzContainerApp is a PowerShell binary module built using .NET Core and designed to work with PowerShell Core. It provides cmdlets, written in C#, for interacting with [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview), [Azure Container App Jobs](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli), and [Azure Container Instances](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-overview).
+PwshAzContainer is a PowerShell binary module built using .NET Core and designed to work with PowerShell Core. It provides cmdlets, written in C#, for interacting with [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview), [Azure Container App Jobs](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli), and [Azure Container Instances](https://learn.microsoft.com/en-us/azure/container-instances/container-instances-overview).
 
 ## Dependencies
 
-`PwshAzContainerApp` depends on the following NuGet packages:
+`PwshAzContainer` depends on the following NuGet packages:
 
 - [Azure.Identity](https://www.nuget.org/packages/Azure.Identity/) (Version 1.10.0)
 - [Azure.ResourceManager.AppContainers](https://www.nuget.org/packages/Azure.ResourceManager.AppContainers/) (Version 1.1.0)
@@ -13,15 +13,15 @@ PwshAzContainerApp is a PowerShell binary module built using .NET Core and desig
 
 ## Installation
 
-To install the [PwshAzContainerApp module](https://www.powershellgallery.com/packages/PwshAzContainerApp), you can use the PowerShell Gallery:
+To install the [PwshAzContainer module](https://www.powershellgallery.com/packages/PwshAzContainer), you can use the PowerShell Gallery:
 
 ```powershell
-Install-Module -Name PwshAzContainerApp -Scope CurrentUser -verbose
+Install-Module -Name PwshAzContainer -Scope CurrentUser -verbose
 ```
 
 ## Usage
 
-`PwshAzContainerApp` provides cmdlets for various Azure Container Apps, Jobs and Instances operations, including creating, getting, updating, and deleting.
+`PwshAzContainer` provides cmdlets for various Azure Container Apps, Jobs and Instances operations, including creating, getting, updating, and deleting.
 
 ### Initialize Azure RM Client
 
