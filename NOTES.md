@@ -3,7 +3,7 @@
 ## Create .NET Project
 
 ```
-$module = 'PwshAzContainerApp'
+$module = 'PwshAzContainer'
 
 dotnet new classlib -n $module
 
@@ -53,6 +53,7 @@ Add `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` to your `.
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.10.0" />
     <PackageReference Include="Azure.ResourceManager.AppContainers" Version="1.1.0" />
+    <PackageReference Include="Azure.ResourceManager.ContainerInstance" Version="1.1.0" />
     <PackageReference Include="PowerShellStandard.Library" Version="7.0.0-preview.1" />
   </ItemGroup>
 
@@ -62,7 +63,7 @@ Add `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` to your `.
 
 ## Build Project
 
-Create an `output` folder at the root of your project (outside of the module folder) and add a sub-folder with the name of the module `PwshAzContainerApp`.
+Create an `output` folder at the root of your project (outside of the module folder) and add a sub-folder with the name of the module `PwshAzContainer`.
 
 ```powershell
 New-Item -Path output\$module -Type Directory
@@ -77,14 +78,14 @@ dotnet build --configuration Release --output .\output\$module\
 You can test your PowerShell binary module with all the references because of this property `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` in your `.csproj` file. Run the following command:
 
 ```powershell
-Import-Module .\output\$module\PwshAzContainerApp.dll
+Import-Module .\output\$module\PwshAzContainer.dll
 ```
 
 ## Publish to PS Gallery
 
-* Copy `PwshAzContainerApp.psd1` file to `output\PwshAzContainerApp`
+* Copy `PwshAzContainer.psd1` file to `output\PwshAzContainer`
 * Publish module to PSGallery with the following commands:
 
 ```powershell
-Publish-Module -Name .\output\PwshAzContainerApp\ -NuGetApiKey XXXXXX -verbose -Debug
+Publish-Module -Name .\output\PwshAzContainer\ -NuGetApiKey XXXXXX -verbose -Debug
 ```
