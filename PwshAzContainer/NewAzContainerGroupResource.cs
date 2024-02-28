@@ -14,13 +14,13 @@ namespace PwshAzContainerApp
     public class NewAzContainerGroupResource : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Parameter(Mandatory = true)]
-        public string ResourceGroupName { get; set; }
+        public string? ResourceGroupName { get; set; }
 
         [Parameter]
-        public string SubscriptionId { get; set; }
+        public string? SubscriptionId { get; set; }
 
         [Parameter]
         [ValidateSet("Linux","Windows")]
@@ -45,7 +45,7 @@ namespace PwshAzContainerApp
         public List<ContainerGroupImageRegistryCredential>? ImageRegistryCredential { get; set; }
 
         [Parameter(Mandatory = true)]
-        public ContainerInstanceContainer ContainerInstance { get; set;}
+        public ContainerInstanceContainer? ContainerInstance { get; set;}
 
         [Parameter()]
         public string Location { get; set; } = "East US";

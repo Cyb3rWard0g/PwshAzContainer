@@ -4,11 +4,17 @@ PwshAzContainer is a PowerShell binary module built using .NET Core and designed
 
 ## Dependencies
 
+### .NET SDK
+
+`.NET SDK 8.0.102`
+
+### NuGet Packages
+
 `PwshAzContainer` depends on the following NuGet packages:
 
-- [Azure.Identity](https://www.nuget.org/packages/Azure.Identity/) (Version 1.10.0)
-- [Azure.ResourceManager.AppContainers](https://www.nuget.org/packages/Azure.ResourceManager.AppContainers/) (Version 1.1.0)
-- [Azure.ResourceManager.ContainerInstance](https://www.nuget.org/packages/Azure.ResourceManager.ContainerInstance) (1.1.0)
+- [Azure.Identity](https://www.nuget.org/packages/Azure.Identity/) (Version 1.10.4)
+- [Azure.ResourceManager.AppContainers](https://www.nuget.org/packages/Azure.ResourceManager.AppContainers/) (Version 1.1.1)
+- [Azure.ResourceManager.ContainerInstance](https://www.nuget.org/packages/Azure.ResourceManager.ContainerInstance) (1.2.0)
 - [PowerShellStandard.Library](https://www.nuget.org/packages/PowerShellStandard.Library/) (Version 7.0.0-preview.1)
 
 ## Installation

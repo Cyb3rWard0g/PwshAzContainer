@@ -12,10 +12,10 @@ namespace PwshAzContainerApp
     public class RemoveAzContainerAppResource : PSCmdlet
     {
         [Parameter(Mandatory = true, ParameterSetName = "ByName")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Parameter(Mandatory = true, ParameterSetName = "ByName")]
-        public string ResourceGroupName { get; set; }
+        public string? ResourceGroupName { get; set; }
 
         [Parameter(ParameterSetName = "ByName")]
         public string? SubscriptionId { get; set; }

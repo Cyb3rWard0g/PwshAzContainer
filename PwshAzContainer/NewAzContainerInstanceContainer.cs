@@ -8,10 +8,10 @@ namespace PwshAzContainerApp
     public class NewAzContainerInstanceContainer : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Parameter(Mandatory = true)]
-        public string Image { get; set; }
+        public string? Image { get; set; }
 
         [Parameter]
         public double MemoryInGB { get; set; } = 3;

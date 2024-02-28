@@ -8,10 +8,10 @@ namespace PwshAzContainerApp
     public class NewAzContainerAppJobExecutionTemplate : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public string ContainerImage { get; set; }
+        public string? ContainerImage { get; set; }
 
         [Parameter(Mandatory = true)]
-        public string ContainerName { get; set; }
+        public string? ContainerName { get; set; }
 
         [Parameter]
         public List<string>? ContainerCommand { get; set; }

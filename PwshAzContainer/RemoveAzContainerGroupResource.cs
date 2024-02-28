@@ -21,7 +21,7 @@ namespace PwshAzContainerApp
         public string? SubscriptionId { get; set; }
 
         [Parameter(ParameterSetName = "ById")]
-        public string? ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         protected override void ProcessRecord()
         {

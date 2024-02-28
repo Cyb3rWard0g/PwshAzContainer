@@ -17,7 +17,7 @@ namespace PwshAzContainerApp
         public string? ResourceGroupName { get; set; }
 
         [Parameter()]
-        public string SubscriptionId { get; set; }
+        public string? SubscriptionId { get; set; }
 
         [Parameter(ParameterSetName = "ById")]
         public string ResourceId { get; set; }
@@ -71,7 +71,7 @@ namespace PwshAzContainerApp
                             // Get the Container Apps in the resource group
                             if (!string.IsNullOrEmpty(Name))
                             {
-                                containerApp = RetrieveContainerApp(resourceGroup, Name);
+                                containerApp = RetrieveContainerApp(resourceGroup, Name)!;
                                 if (containerApp != null)
                                 {
                                     WriteVerbose($"[+] Adding data from {containerApp.Data.Name} to array ...");
@@ -92,7 +92,7 @@ namespace PwshAzContainerApp
                                 // Get the Container Apps in the resource group
                                 if (!string.IsNullOrEmpty(Name))
                                 {
-                                    containerApp = RetrieveContainerApp(resourceGroup, Name);
+                                    containerApp = RetrieveContainerApp(resourceGroup, Name)!;
                                     if (containerApp != null)
                                     {
                                         WriteVerbose($"[+] Found Azure Container App: {Name}");

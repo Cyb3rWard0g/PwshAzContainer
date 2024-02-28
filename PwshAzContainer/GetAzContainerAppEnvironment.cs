@@ -11,7 +11,7 @@ namespace PwshAzContainerApp
     public class GetAzContainerAppEnvironment : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Parameter(Mandatory = true)]
         public string? ResourceGroupName { get; set; }

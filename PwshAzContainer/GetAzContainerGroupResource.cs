@@ -71,7 +71,7 @@ namespace PwshAzContainerApp
                             // Get the container groups in the resource group
                             if (!string.IsNullOrEmpty(Name))
                             {
-                                ContainerGroup = RetrieveContainerGroup(resourceGroup, Name);
+                                ContainerGroup = RetrieveContainerGroup(resourceGroup, Name)!;
                                 if (ContainerGroup != null)
                                 {
                                     WriteVerbose($"[+] Adding data from {ContainerGroup.Data.Name} to array ...");
@@ -92,7 +92,7 @@ namespace PwshAzContainerApp
                                 // Get the container groups in the resource group
                                 if (!string.IsNullOrEmpty(Name))
                                 {
-                                    ContainerGroup = RetrieveContainerGroup(resourceGroup, Name);
+                                    ContainerGroup = RetrieveContainerGroup(resourceGroup, Name)!;
                                     if (ContainerGroup != null)
                                     {
                                         WriteVerbose($"[+] Found Azure Container Group: {Name}");

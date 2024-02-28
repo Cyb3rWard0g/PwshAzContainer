@@ -13,10 +13,10 @@ namespace PwshAzContainerApp
     public class StartAzContainerAppJobResource : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Parameter(Mandatory = true)]
-        public string ResourceGroupName { get; set; }
+        public string? ResourceGroupName { get; set; }
 
         [Parameter]
         public string? SubscriptionId { get; set; }
